@@ -2,6 +2,7 @@ var express = require('express');
 var bcrypt = require('bcrypt');
 var jwt    = require('jsonwebtoken');
 var config = require('../config');
+const authJwt = require("../middlewares/authJwt");
 var auth = express.Router();
 
 auth.get('/', (req, res) => {
@@ -74,6 +75,62 @@ auth.post('/register', function (req, res) {
           }
         });
       });
+});
+
+auth.post('/uploadProfilePhoto', function (req, res) {
+  var db = require("../db");
+  var User   = require('../models/user'); 
+
+  User.findById(req.body.userId)
+    .exec((err, user) => {
+    if (err) {
+      res.status(500).send(err.message);
+    }
+    if (!user) {
+      res.status(500).send('User invalid');
+    }
+    
+    const query = { _id: req.body.userId };
+    const update = { $set: { profilePhoto: req.body.base64image }};
+
+    const options = {};
+    User.updateOne(query, update, options, (err, xxx) => {
+        res.json({ 
+          message: 'Picture was Uploaded successfully' 
+        });
+    });
+  });
+});
+
+auth.post("/updateProfileInfo", function (req, res) {
+  var db = require("../db");
+  var User   = require('../models/user'); 
+
+  User.findById(req.body.userId)
+    .exec((err, user) => {
+    if (err) {
+      res.status(500).send(err.message);
+    }
+    if (!user) {
+      res.status(500).send('User invalid');
+    }
+    
+    const query = { _id: req.body.userId };
+    const update = { $set: { profilePhoto: req.body.base64image }};
+
+    const options = {};
+    User.updateOne(query, update, options, (err, xxx) => {
+        res.json({ 
+          message: 'Picture was Uploaded successfully' 
+        });
+    });
+  });
+});
+
+auth.post("/testeToken", [ authJwt.verifyToken ], function (req, res) {
+  res.json({ 
+    message: 'Authenticated' 
+  });
 });
 
 module.exports = auth;
