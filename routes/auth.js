@@ -50,6 +50,8 @@ auth.post('/login', function (req, res) {
       }).catch(function(error){
         console.log(error.message);
         res.json({success: false, message: error.message});
+      }).finally(()=>{
+        db.disconect();
       })
 });
   
@@ -60,20 +62,20 @@ auth.post('/register', function (req, res) {
       var password = req.body.password;
       
       bcrypt.hash(password, 12).then(function(hashedPassword) {
-        var user = new User({ 
+        var usr = new User({ 
           email: userEmail, 
           password: hashedPassword
         });
-  
-        user.save(function(err) {
-          if (err) {
-            res.status(500).send(err.message);
-          }
-          else{
-            res.json({ 
-              message: 'User saved successfully' });
-          }
-        });
+        
+        user.save().then((u) => {
+          res.json({ 
+            message: 'User saved successfully' 
+          });
+        }).catch(function(err){
+          res.status(500).send(err.message);
+        }).finally(()=>{
+          db.disconect();
+        })
       });
 });
 

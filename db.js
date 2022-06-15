@@ -10,7 +10,12 @@ mongoose.connect(config.db, { useNewUrlParser: true }).then( x =>
     }
 );
 
+function disconect(){
+    mongoose.disconnect();
+}
+
 module.exports = 
 { 
-    Mongoose: mongoose
+    Mongoose: mongoose,
+    disconect: disconect
 }
