@@ -51,7 +51,7 @@ auth.post('/login', function (req, res) {
         console.log(error.message);
         res.json({success: false, message: error.message});
       }).finally(()=>{
-        db.disconect();
+        //db.disconect();
       })
 });
   
@@ -74,7 +74,7 @@ auth.post('/register', function (req, res) {
         }).catch(function(err){
           res.status(500).send(err.message);
         }).finally(()=>{
-          db.disconect();
+          //db.disconect();
         })
       });
 });
