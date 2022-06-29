@@ -46,6 +46,23 @@ io.on('connection', socket => {
       }
     });
   });
+  socket.on('updateActive', (arg, callback) => {
+    var db = require('./db');
+    var ActiveUser = require('./models/activeUsers');
+    var activeUser = new ActiveUser({
+      email: arg.email,
+      socketId: arg.socketId,
+    });
+
+    activeUser.save(function(err) {
+      if (err) {
+        callback(err.message);    
+      }
+      else{
+        callback('User Activated');
+      }
+    });
+  });
 });
 
 server.listen(4000, () => {

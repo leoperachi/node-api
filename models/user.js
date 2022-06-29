@@ -18,6 +18,10 @@ module.exports = mongoose.model('User', new Schema({
       type: String,
       required:false
     },
+    userName: {
+      type: String,
+      required:false
+    },
     firstName: {
       type: String,
       required:false

@@ -28,6 +28,8 @@ auth.post('/login', function (req, res) {
                 token = jwt.sign(payload, config.jwtSecret, {
                     expiresIn: config.jwtDuration 
                 });
+
+                user.token = token;
         
                 res.json(
                   {
@@ -35,6 +37,7 @@ auth.post('/login', function (req, res) {
                     token: token, 
                     id: user._id,
                     profilePhoto: user.profilePhoto,
+                    userName: user.userName,
                     firstName: user.firstName,
                     lastName: user.lastName,
                     city: user.city,
@@ -107,7 +110,6 @@ auth.post('/uploadProfilePhoto', function (req, res) {
 auth.post("/updateProfileInfo", function (req, res) {
   var db = require("../db");
   var User   = require('../models/user'); 
-
   User.findById(req.body.userId)
     .exec((err, user) => {
     if (err) {
@@ -117,13 +119,25 @@ auth.post("/updateProfileInfo", function (req, res) {
       res.status(500).send('User invalid');
     }
     
+    console.log(req.body);
+
     const query = { _id: req.body.userId };
-    const update = { $set: { profilePhoto: req.body.base64image }};
+    const update = { $set: 
+      { 
+        userName: req.body.userName, 
+        firstName: req.body.firstName, 
+        lastName: req.body.lastName, 
+        lastName: req.body.lastName,
+        city: req.body.city,
+        state: req.body.state,
+        zipCode: req.body.zip
+      } 
+    };
 
     const options = {};
     User.updateOne(query, update, options, (err, xxx) => {
         res.json({ 
-          message: 'Picture was Uploaded successfully' 
+          message: 'Profile was updated successfully' 
         });
     });
   });
