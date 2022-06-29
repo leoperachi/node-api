@@ -59,27 +59,27 @@ auth.post('/login', function (req, res) {
 });
   
 auth.post('/register', function (req, res) {
-      var db = require("../db");
-      var User   = require('../models/user');
-      var userEmail = req.body.email;
-      var password = req.body.password;
-      
-      bcrypt.hash(password, 12).then(function(hashedPassword) {
-        var usr = new User({ 
-          email: userEmail, 
-          password: hashedPassword
-        });
-        
-        user.save().then((u) => {
-          res.json({ 
-            message: 'User saved successfully' 
-          });
-        }).catch(function(err){
-          res.status(500).send(err.message);
-        }).finally(()=>{
-          //db.disconect();
-        })
+  var db = require("../db");
+  var User   = require('../models/user');
+  var userEmail = req.body.email;
+  var password = req.body.password;
+  
+  bcrypt.hash(password, 12).then(function(hashedPassword) {
+    var user = new User({ 
+      email: userEmail, 
+      password: hashedPassword
+    });
+    
+    user.save().then((u) => {
+      res.json({ 
+        message: 'User saved successfully' 
       });
+    }).catch(function(err){
+      res.status(500).send(err.message);
+    }).finally(()=>{
+      //db.disconect();
+    })
+  });
 });
 
 auth.post('/uploadProfilePhoto', function (req, res) {
