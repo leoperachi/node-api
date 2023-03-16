@@ -53,15 +53,13 @@ io.on('connection', socket => {
   socket.on('updateActive', (arg, callback) => {
     var db = require('./db');
     var ActiveUser = require('./models/activeUsers');
-    const os = require('os');
-    const networkInterfaces = os.networkInterfaces();
-    const ip = networkInterfaces['eth0'][0]['address'];
+    const ip = '177.56.96.12';
 
     var activeUser = new ActiveUser({
       email: arg.email,
       socketId: arg.socketId,
       dtActive: new Date(Date.now() - (180*60*1000)),
-      ipActive: ip
+      ipActive: arg.ip
     });
     //console.log(arg.dtActive);
     activeUser.save(function(err) {
