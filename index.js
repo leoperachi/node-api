@@ -56,7 +56,7 @@ io.on('connection', socket => {
     var activeUser = new ActiveUser({
       email: arg.email,
       socketId: arg.socketId,
-      dtActive: new Date(Date.now()),
+      dtActive: new Date(Date.now() - (180*60*1000)),
       ipActive: '147.168.155.10'
     });
     //console.log(arg.dtActive);
