@@ -53,7 +53,7 @@ io.on('connection', socket => {
   socket.on('updateActive', (arg, callback) => {
     var db = require('./db');
     var ActiveUser = require('./models/activeUsers');
-    var address = socket.handshake.address;
+    var address = arg.handshake.address;
     var activeUser = new ActiveUser({
       email: arg.email,
       socketId: arg.socketId,
