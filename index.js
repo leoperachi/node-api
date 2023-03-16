@@ -53,11 +53,12 @@ io.on('connection', socket => {
   socket.on('updateActive', (arg, callback) => {
     var db = require('./db');
     var ActiveUser = require('./models/activeUsers');
+    var address = socket.handshake.address;
     var activeUser = new ActiveUser({
       email: arg.email,
       socketId: arg.socketId,
       dtActive: new Date(Date.now() - (180*60*1000)),
-      ipActive: '147.168.155.10'
+      ipActive: address.address + ':' + address.port
     });
     //console.log(arg.dtActive);
     activeUser.save(function(err) {
