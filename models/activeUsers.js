@@ -11,5 +11,13 @@ module.exports = mongoose.model('ActiveUser', new Schema({
     socketId: {
       type: String,
       required: true
+    },
+    dtActive:{
+      type: Date,
+      required: true
+    },
+    ipActive:{
+      type: String,
+      required: false
     }
 }));
