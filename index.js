@@ -42,18 +42,18 @@ io.on('connection', socket => {
         callback(err.message);    
       }
       else{
-        callback('Msg Received');
+        //server chama client pelo id e manda atualiza msgs
+        var ActiveUser = require('./models/activeUsers');
+        ActiveUser.find({ email: arg.to }).sort({dtActive: -1}).limit(1).then((user) => {
+          io.sockets.sockets.get(user[0].socketId).emit("receiveMsg", { from: arg.from });
+          callback('sucesso');
+        });
       }
-
-      //server chama client pelo id e manda atualiza msgs
-      //io.sockets.socket(savedSocketId).emit(...)
-      //io.clients
     });
   });
   socket.on('updateActive', (arg, callback) => {
     var db = require('./db');
     var ActiveUser = require('./models/activeUsers');
-    const ip = '177.56.96.12';
 
     var activeUser = new ActiveUser({
       email: arg.email,
