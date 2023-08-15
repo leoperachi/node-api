@@ -11,10 +11,11 @@ auth.get('/', (req, res) => {
   
 auth.post('/login', function (req, res) {
       var db = require("../db");
-      var User   = require('../models/user'); // get our mongoose model
+      var User   = require('../models/user'); 
+      var Role   = require('../models/role');
       User.findOne({
         email: req.body.email
-      }).then(function(user) {
+      }).populate('role').then(function(user) {
         if (!user) { //nao achou
           res.status(401).send('Authentication failed. User not found.');
         }
@@ -42,7 +43,8 @@ auth.post('/login', function (req, res) {
                     lastName: user.lastName,
                     city: user.city,
                     state: user.state,
-                    zipCode: user.zipCode
+                    zipCode: user.zipCode,
+                    role: user.role
                   });
               }
               else{
@@ -61,24 +63,28 @@ auth.post('/login', function (req, res) {
 auth.post('/register', function (req, res) {
   var db = require("../db");
   var User   = require('../models/user');
+  var Role   = require('../models/role');
   var userEmail = req.body.email;
   var password = req.body.password;
   
-  bcrypt.hash(password, 12).then(function(hashedPassword) {
-    var user = new User({ 
-      email: userEmail, 
-      password: hashedPassword
-    });
-    
-    user.save().then((u) => {
-      res.json({ 
-        message: 'User saved successfully' 
+  const role = Role.findById('64d452edd03216cf04107742').then((v) => {
+    bcrypt.hash(password, 12).then(function(hashedPassword) {
+      var user = new User({ 
+        email: userEmail, 
+        password: hashedPassword,
+        role: v
       });
-    }).catch(function(err){
-      res.status(500).send(err.message);
-    }).finally(()=>{
-      //db.disconect();
-    })
+  
+      user.save().then((u) => {
+        res.json({ 
+          message: 'User saved successfully' 
+        });
+      }).catch(function(err){
+        res.status(500).send(err.message);
+      }).finally(()=>{
+        //db.disconect();
+      })
+    });
   });
 });
 

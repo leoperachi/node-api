@@ -41,5 +41,9 @@ module.exports = mongoose.model('User', new Schema({
     zipCode: {
       type: String,
       required:false
+    },
+    role: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'Role'
     }
 }));
