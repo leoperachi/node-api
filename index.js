@@ -45,7 +45,10 @@ io.on('connection', socket => {
         //server chama client pelo id e manda atualiza msgs
         var ActiveUser = require('./models/activeUsers');
         ActiveUser.find({ email: arg.to }).sort({dtActive: -1}).limit(1).then((user) => {
-          io.sockets.sockets.get(user[0].socketId).emit("receiveMsg", { from: arg.from });
+          if(io.sockets.sockets.get(user[0].socketId) != undefined){
+            io.sockets.sockets.get(user[0].socketId).emit("receiveMsg", { from: arg.from });
+          }
+          
           callback('sucesso');
         });
       }
@@ -61,7 +64,7 @@ io.on('connection', socket => {
       dtActive: new Date(Date.now() - (180*60*1000)),
       ipActive: arg.ip
     });
-    //console.log(arg.dtActive);
+    
     activeUser.save(function(err) {
       if (err) {
         callback(err.message);    

@@ -29,7 +29,7 @@ auth.post('/login', function (req, res) {
                 token = jwt.sign(payload, config.jwtSecret, {
                     expiresIn: config.jwtDuration 
                 });
-
+                
                 user.token = token;
         
                 res.json(
@@ -115,7 +115,7 @@ auth.post('/uploadProfilePhoto', function (req, res) {
 
 auth.post("/updateProfileInfo", function (req, res) {
   var db = require("../db");
-  var User   = require('../models/user'); 
+  var User = require('../models/user'); 
   User.findById(req.body.userId)
     .exec((err, user) => {
     if (err) {
@@ -125,8 +125,6 @@ auth.post("/updateProfileInfo", function (req, res) {
       res.status(500).send('User invalid');
     }
     
-    console.log(req.body);
-
     const query = { _id: req.body.userId };
     const update = { $set: 
       { 
@@ -141,11 +139,20 @@ auth.post("/updateProfileInfo", function (req, res) {
     };
 
     const options = {};
-    User.updateOne(query, update, options, (err, xxx) => {
+    User.findOneAndUpdate(query, update, options, (err, doc, result) => {
         res.json({ 
-          message: 'Profile was updated successfully' 
+          message: 'Profile was updated successfully',
+          user: doc
         });
     });
+  });
+});
+
+auth.post('/requestPasswordReset', function(req, res) {
+  var db = require("../db");
+  var User   = require('../models/user'); 
+  User.findOne({ email: req.body.email }).then(function(u) {
+
   });
 });
 
